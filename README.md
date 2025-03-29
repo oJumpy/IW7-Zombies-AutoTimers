@@ -13,13 +13,11 @@ Open LiveSplit > Right Click > Edit Layout > + > Control > Scriptable Auto Split
 # Recommendations for AutoSplitter:
 - I recommend downloading this [Useful](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/Useful.zip) stuff
 - [My Layout](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/recommended_layout.lsl) For best results
--Make sure your LiveSplit is comparing against Game Time and for SubSplits, Splits, Timer, Detailed Timer, Etc... in "Timing Method" I recommend using "Current Timing Method"
+- Make sure your LiveSplit is comparing against Game Time and for SubSplits, Splits, Timer, Detailed Timer, Etc... in "Timing Method" I recommend using "Current Timing Method"
 
 If you are going to make your own layout:
 - Make sure it's comparing to **Game Time**
-
 - Use SubSplits
-
 - Use Detailed Timer
 
 ## Features  
