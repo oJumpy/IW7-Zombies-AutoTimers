@@ -8,7 +8,7 @@
 # *READ ME:*
 
 # SETUP:
-Open LiveSplit > Right Click > Edit Layout > + > Control > Scriptable Auto Splitter
+Open LiveSplit > Right Click > Edit Layout > + > Control > Scriptable Auto Splitter > Load `Infinite-Warfare-Master.asl`
 
 # Recommendations for AutoSplitter:
 - I recommend downloading this [Useful](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/Useful.zip) stuff
@@ -21,10 +21,10 @@ If you are going to make your own layout:
 - Use Detailed Timer
 
 ## Features  
-**Frame-Perfect Timing** – Synced to game engine  
-**Auto-Splitting** – Triggers on every round change  
-**Reset Tracker** – Tracks time, value until engine overflow 
-**Entity Monitor** – Live zombie/object counter
+ **Frame-Perfect Timing** – Synced to game engine  
+ **Auto-Splitting** – Triggers on every round change  
+ **Reset Tracker** – Tracks time and value until engine overflow  
+ **Entity Monitor** – Live zombie/object counter  
 
 ### Coming Soon  
 **Error Analytics** *(Coming Soon!)* – Cryo Counter, Croc Counter, and more.  
