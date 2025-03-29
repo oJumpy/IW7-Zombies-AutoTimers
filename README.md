@@ -23,8 +23,6 @@ If you are going to make your own layout:
 ## Features  
 **Frame-Perfect Timing** – Synced to game engine  
 **Auto-Splitting** – Triggers on every round change  
-**Synced to Game Time**
-**Splits whenever a round changes** 
 **Reset Tracker** – Tracks time, value until engine overflow 
 **Entity Monitor** – Live zombie/object counter
 
