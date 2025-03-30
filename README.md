@@ -1,7 +1,7 @@
 # IW7-Zombies-AutoTimers
 *A multi-functional LiveSplit script for Call of Duty: Infinite Warfare Zombies.*  
 
-# [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/Infinite-Warfare-Master.asl)
+# [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.1/Infinite-Warfare-Master.v1.1.asl)
 
 [![Download](https://img.shields.io/badge/Download-v1.1-blue?style=flat-square)](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.1/Infinite-Warfare-Master.v1.1.asl)  
 
