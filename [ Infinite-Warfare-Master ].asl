@@ -319,7 +319,7 @@ gameTime
 
     if (settings["Solo Timer"])
     {
-        return new TimeSpan(0, 0, 0, 0, vars.trueTime * 50 - 7650);
+        return new TimeSpan(0, 0, 0, 0, vars.trueTime * 50 + 20800);
     }
     
     return TimeSpan.Zero;
