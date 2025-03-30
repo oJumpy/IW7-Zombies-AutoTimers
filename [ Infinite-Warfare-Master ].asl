@@ -5,6 +5,9 @@ state("iw7_ship", "IW Steam")
     string13 currentMap : 0x60071E8;
     int resetTime : 0x6B39814;
     int Entities : 0x9AB7500; 
+    int fishTrap : 0x778FD24;
+    int waterfallTrap : 0x2276828;
+    int woodChipperTrap : 0x9AC6EBC;
 }
 
 state("iw7-mod", "IW7-Mod")
@@ -47,6 +50,8 @@ startup
 
         settings.Add("rave", false, "Rave in the Redwoods", "Trap Timers");
             settings.Add("feedthefish", true, "Feed the fish", "rave");
+            settings.Add("chipper", false, "Wood Chipper", "rave");
+            settings.Add("water", false, "Waterfall", "rave");
 
         settings.Add("shuffle", false, "Shaolin Shuffle", "Trap Timers");
             //settings.Add("bunker", true, "Bunker", "gk");
@@ -169,6 +174,16 @@ init
         }
 
     refreshRate = 75;
+    vars.fixedOffset = 0;
+    vars.isFirstRoundTransition = true; // Track first transition
+
+    vars.initialOffset = -7650;  // Define the initial offset
+    vars.fixedOffsetGameTime = 0;  // Initialize the game time offset
+    vars.trueTime = 0;  // Initialize true time
+
+    vars.FIshTrapStart = -1400;
+    vars.WaterfallTrapStart = -1100;
+    vars.WoodChipperTrapStart = -1360;
     
     if (settings["Solo Timer"])
     {
@@ -192,11 +207,21 @@ update
     
     if (settings["Solo Timer"])
     {
-        if (old.round_counter == 0 && current.round_counter == 1)
+        // Detect game reset (levelTime transition from >0 to 0)
+        if (old.levelTime > 0 && current.levelTime == 0)
         {
-            game.WriteValue<UInt16>((IntPtr)vars.addrGameTime, (UInt16)current.levelTime);
-            vars.fixedOffsetGameTime = current.levelTime;
+            vars.fixedOffsetGameTime = 0;
+            print("Timer reset detected!");
         }
+        
+        // Detect game start (levelTime transition from 0 to >0)
+        if (old.levelTime == 0 && current.levelTime > 0)
+        {
+            vars.fixedOffsetGameTime = current.levelTime;
+            print("Game started! Initializing timer...");
+        }
+        
+        // Standard timing calculation
         vars.trueTime = current.levelTime - vars.fixedOffsetGameTime;
     }
 
@@ -263,7 +288,7 @@ update
             else
             {
                 //If ticksLeft is invalid, don't update the timer
-                vars.RemoveText("Reset Timer:");
+                //vars.RemoveText("Reset Timer:");
             }
         }
         else
@@ -280,6 +305,133 @@ update
         {
             vars.RemoveText("Entities:");
         }
+    }
+
+    string baseMap = current.currentMap;
+    if (baseMap.Contains("."))
+    {
+        baseMap = baseMap.Substring(0, baseMap.IndexOf("."));
+    }
+
+    bool isRaveMap = (baseMap == "cp_rave");
+
+    if (settings["feedthefish"] && isRaveMap)
+    {
+        string trapDisplayName = "Fish Trap:";
+    
+        // Initialize display (only needed once)
+        if (vars.FIshTrapStart == -1400)
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+    
+        // Calculate if timer is active and how much time is left
+        bool timerActive = (vars.FIshTrapStart != -1400);
+        int remainingTicks = 0;
+        
+        if (timerActive)
+        {
+            int elapsedTicks = current.levelTime - vars.FIshTrapStart;
+            remainingTicks = Math.Max(0, 1400 - elapsedTicks);
+            
+            // If timer has completed (or is very close), reset the start time
+            if (remainingTicks <= 10) // ~0.5 seconds left
+            {
+                vars.FIshTrapStart = -1400;
+                timerActive = false;
+            }
+        }
+    
+        // Only allow new activation if timer isn't already running
+        if (!timerActive && current.fishTrap == 2 && old.fishTrap != 2)
+        {
+            vars.FIshTrapStart = current.levelTime;
+            //print("Fish trap activated - starting 70s countdown");
+            timerActive = true;
+            remainingTicks = 1400;
+        }
+    
+        // Show countdown if timer is active
+        if (timerActive)
+        {
+            TimeSpan remainingTime = TimeSpan.FromMilliseconds(remainingTicks * 50);
+            string formattedTime = remainingTime.ToString(@"m\:ss\.ff");
+            vars.SetText(trapDisplayName, formattedTime);
+        }
+        else
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+    }
+    else
+    {
+        vars.RemoveText("Fish Trap:");
+    }
+
+    if (settings["chipper"] && isRaveMap)
+    {
+        string trapDisplayName = "Wood Chipper Trap:";
+
+        // Initialize display (only needed once)
+        if (vars.WoodChipperTrapStart == -1360)
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+
+        // Start countdown when trap activates (value becomes 2)
+        if (current.woodChipperTrap != 0 && old.woodChipperTrap == 0)
+        {
+            vars.WoodChipperTrapStart = current.levelTime;
+        }
+
+        // Show countdown if timer is active
+        if (vars.WoodChipperTrapStart != -1360)
+        {
+            int elapsedTicks = current.levelTime - vars.WoodChipperTrapStart;
+            int remainingTicks = Math.Max(0, 1360 - elapsedTicks);
+            
+            TimeSpan remainingTime = TimeSpan.FromMilliseconds(remainingTicks * 50);
+            string formattedTime = remainingTime.ToString(@"m\:ss\.ff");
+            
+            vars.SetText(trapDisplayName, formattedTime);
+        }
+    }
+    else
+    {
+        vars.RemoveText("Wood Chipper Trap:");
+    }
+
+    if (settings["water"] && isRaveMap) 
+    {
+        string trapDisplayName = "Waterfall Trap:";
+
+        // Initialize display (only needed once)
+        if (vars.WaterfallTrapStart == -1100)
+        {
+            vars.SetText(trapDisplayName, "00.00");
+        }
+
+        // Start countdown when trap activates (value becomes 2)
+        if (current.waterfallTrap == 1 && old.waterfallTrap != 1)
+        {
+            vars.WaterfallTrapStart = current.levelTime;
+        }
+
+        // Show countdown if timer is active
+        if (vars.WaterfallTrapStart != -1100)
+        {
+            int elapsedTicks = current.levelTime - vars.WaterfallTrapStart;
+            int remainingTicks = Math.Max(0, 1100 - elapsedTicks);
+            
+            TimeSpan remainingTime = TimeSpan.FromMilliseconds(remainingTicks * 50);
+            string formattedTime = remainingTime.ToString(@"ss\.ff");
+            
+            vars.SetText(trapDisplayName, formattedTime);
+        }
+    }
+    else
+    {
+        vars.RemoveText("Waterfall Trap:");
     }
 }
 
@@ -303,23 +455,16 @@ split
 gameTime
 {
     string[] arrayMaps = {"cp_zmb", "cp_rave", "cp_disco", "cp_town", "cp_final"};
-
-    // Extract base map name (remove .d3dbs extension)
-    string baseMap = current.currentMap;
-    if (baseMap.Contains("."))
-    {
-        baseMap = baseMap.Substring(0, baseMap.IndexOf("."));
-    }
-
-    // Corrected Array.IndexOf usage
-    if(Array.IndexOf(arrayMaps, baseMap) == -1)
-    {
+    string baseMap = current.currentMap.Split('.')[0];
+    
+    if (!arrayMaps.Contains(baseMap))
         return TimeSpan.Zero;
-    }
 
     if (settings["Solo Timer"])
     {
-        return new TimeSpan(0, 0, 0, 0, vars.trueTime * 50 + 20800);
+        // Use -7650 offset initially, then switch to normal timing
+        int finalOffset = (vars.fixedOffsetGameTime == current.levelTime) ? vars.initialOffset : -7650;
+        return new TimeSpan(0, 0, 0, 0, vars.trueTime * 50 + finalOffset);
     }
     
     return TimeSpan.Zero;
@@ -348,7 +493,8 @@ reset
     {
         if (current.levelTime == 0 && old.levelTime != 0)
         {
-            //vars.split_index = 0;
+            vars.split_index = 0;
+            vars.fixedOffsetGameTime = 0; // Reset the offset
             return true;
         }
     }
@@ -362,7 +508,10 @@ exit
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
-        {"Reset Timer", "Reset Timer:"}
+        {"Reset Timer", "Reset Timer:"},
+        {"feedthefish", "Fish Trap:"},
+        {"chipper", "Wood Chipper Trap:"},
+        {"water", "Waterfall Trap:"}
     };
 
     // Process all text removals
@@ -382,7 +531,10 @@ shutdown
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
-        {"Reset Timer", "Reset Timer:"}
+        {"Reset Timer", "Reset Timer:"},
+        {"feedthefish", "Fish Trap:"},
+        {"chipper", "Wood Chipper Trap:"},
+        {"water", "Waterfall Trap:"}
     };
 
     // Process all text removals
