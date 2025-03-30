@@ -3,7 +3,7 @@
 
 # [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/Infinite-Warfare-Master.asl)
 
-[![Download](https://img.shields.io/badge/Download-v1.0-blue?style=flat-square)](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1/Infinite-Warfare-Master.asl)  
+[![Download](https://img.shields.io/badge/Download-v1.1-blue?style=flat-square)](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.1/Infinite-Warfare-Master.v1.1.asl)  
 
 # *READ ME:*
 
@@ -25,7 +25,20 @@ If you are going to make your own layout:
  **Auto-Splitting** – Triggers on every round change  
  **Reset Tracker** – Tracks time and value until engine overflow  
  **Entity Monitor** – Live zombie/object counter  
+ **Trap Timers** – Trap Timers for Rave in the Redwoods.
 
 ### Coming Soon  
 **Error Analytics** *(Coming Soon!)* – Cryo Counter, Croc Counter, and more.  
-**Trap Timers**  *(Coming Soon!)* – Trap Timers for Spaceland, Rave, etc.  
+**Trap Timers**  *(Coming Soon!)* – Trap Timers for Spaceland, Rave (Added), etc.  
+
+
+> [!CAUTION]
+> # *Known Issues*
+> 
+> - **Fish Trap Timer**:  
+>   The fish trap behavior might occasionally act unexpectedly. If you notice any of the following:
+>   - Timer not starting when it should  
+>   - Timer restarting prematurely  
+>   - Timer not resetting properly after completion  
+> 
+> If you encounter any of these issues, please DM me on Discord - oJumpy.
