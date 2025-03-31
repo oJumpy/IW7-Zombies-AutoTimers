@@ -25,7 +25,8 @@ If you are going to make your own layout:
  **Auto-Splitting** – Triggers on every round change  
  **Reset Tracker** – Tracks time and value until engine overflow  
  **Entity Monitor** – Live zombie/object counter  
- **Trap Timers** – Trap Timers for Spaceland and Rave in the Redwoods.
+ **Counters Monitor** – Counter for Crocodile traps and Kindles Pops usage (when shot)  
+ **Trap Timers** – Trap Timers for Spaceland and Rave in the Redwoods  
 ### Available Trap Timers:  
 #### Spaceland  
 - Crocodile Trap  
