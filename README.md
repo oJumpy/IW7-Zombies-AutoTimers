@@ -1,9 +1,9 @@
 # IW7-Zombies-AutoTimers
 *A multi-functional LiveSplit script for Call of Duty: Infinite Warfare Zombies.*  
 
-# [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.1/Infinite-Warfare-Master.v1.1.asl)
+# [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.2/Infinite-Warfare-Master.v1.2.asl)
 
-[![Download](https://img.shields.io/badge/Download-v1.1-blue?style=flat-square)](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.1/Infinite-Warfare-Master.v1.1.asl)  
+[![Download](https://img.shields.io/badge/Download-v1.2-blue?style=flat-square)](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.2/Infinite-Warfare-Master.v1.2.asl)  
 
 # *READ ME:*
 
@@ -25,15 +25,27 @@ If you are going to make your own layout:
  **Auto-Splitting** – Triggers on every round change  
  **Reset Tracker** – Tracks time and value until engine overflow  
  **Entity Monitor** – Live zombie/object counter  
- **Trap Timers** – Trap Timers for Rave in the Redwoods.
+ **Trap Timers** – Trap Timers for Spaceland and Rave in the Redwoods.
+### Available Trap Timers:  
+#### Spaceland  
+- Crocodile Trap  
+
+#### Rave in the Redwoods  
+- Feed the Fish Trap  
+- Wood Chipper  
+- Waterfall  
+
 
 ### Coming Soon  
-**Error Analytics** *(Coming Soon!)* – Cryo Counter, Croc Counter, and more.  
-**Trap Timers**  *(Coming Soon!)* – Trap Timers for Spaceland, Rave (Added), etc.  
+**Error Analytics** *(Coming Soon!)* – Cryo Counter, Croc Counter (added), and more.  
+**Trap Timers**  *(Coming Soon!)* – Trap Timers for Spaceland, Rave (Added all), etc.  
 
 
 > [!CAUTION]
 > # *Known Issues*
+>
+> - **Kindles Pops**:
+>   Kindles Pops will only work 1 active at a time and timer only starts from 40 seconds. For now
 > 
 > - **Fish Trap Timer**:  
 >   The fish trap behavior might occasionally act unexpectedly. If you notice any of the following:
