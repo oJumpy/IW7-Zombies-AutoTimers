@@ -18,7 +18,7 @@ If you encounter any issues, please DM me on Discord: `ojumpy`.
   - (Rave) Waterfall
 
 ## Setup
-1. Right Click LiveSplit → Edit Layout → `+` button → Control → Scriptable Auto Splitter → Browse to `Infinite-Warfare-Master.asl`.
+1. Right Click LiveSplit → Edit Layout → `+` button → Control → Scriptable Auto Splitter → Browse to `Infinite-Warfare-Master.asl` and select it.
 1. If you want splits, refer to [Setting up Splits](#setting-up-splits) at this step.
 1. Right Click LiveSplit → Compare Against → Select `Game Time`, Look down to where it says: *Best Segments*, *Average Segments*...
 
