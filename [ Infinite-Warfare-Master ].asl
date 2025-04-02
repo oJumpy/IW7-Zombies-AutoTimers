@@ -5,12 +5,16 @@ state("iw7_ship", "IW Steam")
     string13 currentMap : 0x60071E8;
     int resetTime : 0x6B39814;
     int Entities : 0x9AB7500; 
+    int ChildrenAddress : 0x665A134; 
     int LevelNumEnt : 0x3C98680;
     int fishTrap : 0x60BA5A0;
+    int fishTrap2 : 0x60BA5F0;
     int waterfallTrap : 0x2276828;
     int woodChipperTrap : 0x9AC6EBC;
     int CrocTrap : 0x3D31C78;
     int KindlePops : 0x5D5FC1C;
+    int KindleBoxes : 0x60C5040; //0x3CA2DE4
+    int CyroAddress : 0x9AA7694; 
 }
 
 state("iw7-mod", "IW7-Mod")
@@ -20,17 +24,24 @@ state("iw7-mod", "IW7-Mod")
     string13 currentMap : "iw7_ship.exe", 0x60071E8;
     int resetTime : "iw7_ship.exe", 0x6B39814;
     int Entities : "iw7_ship.exe", 0x9AB7500; 
+    int ChildrenAddress : "iw7_ship.exe", 0x665A134;
+    int LevelNumEnt : "iw7_ship.exe", 0x3C98680;
     int fishTrap : "iw7_ship.exe", 0x60BA5A0;
+    int fishTrap2 : "iw7_ship.exe", 0x60BA5F0;
     int waterfallTrap : "iw7_ship.exe", 0x2276828;
     int woodChipperTrap : "iw7_ship.exe", 0x9AC6EBC;
     int CrocTrap : "iw7_ship.exe", 0x3D31C78;
     int KindlePops : "iw7_ship.exe", 0x5D5FC1C;
+    int KindleBoxes : "iw7_ship.exe", 0x60C5040;
+    int CyroAddress : "iw7_ship.exe", 0x9AA7694;
 }
 
 startup
 {
     //Solo Timer
     settings.Add("Solo Timer", true);
+
+    settings.Add("Enable Splits", true);
 
     //Reset Options (Parent Setting)
     settings.Add("Reset Options", true);
@@ -44,10 +55,11 @@ startup
 
     //Error Tracker
     settings.Add("Errors Trackers", true);
+        settings.Add("Script variables", false, "Script variables", "Errors Trackers");
         settings.Add("G-Spawn", false, "G-Spawn", "Errors Trackers");
-        settings.Add("Cyro Counter", false, "Cyro Counter", "Errors Trackers");
+        settings.Add("Cryo Counter", false, "Cryo Counter", "Errors Trackers");
         settings.Add("Croc Counter", false, "Croc Counter", "Errors Trackers");
-        settings.Add("Kindles Pops Counter", false, "Kindles Pops Counter", "Errors Trackers");
+        settings.Add("Kindles Pops Box Counter", false, "Kindles Pops Box Counter", "Errors Trackers");
     
     settings.Add("Clear Counters", false);
 
@@ -140,7 +152,11 @@ startup
             {
                 vars.crocsSlamsCounter = int.Parse(line.Split(':')[1].Trim());
             }
-            else if (line.StartsWith("Kindles Pops:"))
+            if (line.StartsWith("Cryo:"))
+            {
+                vars.CryoCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Kindles Pops Boxes:"))
             {
                 vars.kindlesPopsCounter = int.Parse(line.Split(':')[1].Trim());
             }
@@ -149,9 +165,11 @@ startup
     else
     {
         vars.crocsSlamsCounter = 0;
+        vars.CryoCounter = 0;
         vars.kindlesPopsCounter = 0;
     }
 
+    vars.CryoCounter = 0;
     vars.kindlesPopsCounter = 0;
 
     // Existing box hits initialization...
@@ -226,14 +244,12 @@ update
         if (old.levelTime > 0 && current.levelTime == 0)
         {
             vars.fixedOffsetGameTime = 0;
-            print("Timer reset detected!");
         }
         
         // Detect game start (levelTime transition from 0 to >0)
         if (old.levelTime == 0 && current.levelTime > 0)
         {
             vars.fixedOffsetGameTime = current.levelTime;
-            print("Game started! Initializing timer...");
         }
         
         // Standard timing calculation
@@ -322,6 +338,16 @@ update
         }
     }
 
+    if (settings["Script variables"])
+    {
+        string resetText = current.ChildrenAddress.ToString() + " / 40960"; //Raw reset time
+        vars.SetText("Script variables:", resetText);
+    }
+    else
+    {
+        vars.RemoveText("Script variables:");
+    }
+
     if (settings["G-Spawn"])
     {
         string resetText = current.LevelNumEnt.ToString() + " / 2046"; //Raw reset time
@@ -373,6 +399,7 @@ update
 
     bool isSpaceMap = (baseMap == "cp_zmb");
     bool isRaveMap = (baseMap == "cp_rave");
+    bool isFrontEnd = (baseMap == "cp_frontend");
     
     if (settings["croc"] && isSpaceMap) 
     {
@@ -434,7 +461,7 @@ update
         }
     
         // Only allow new activation if timer isn't already running
-        if (!timerActive && current.fishTrap != 237043764 && old.fishTrap == 237043764)
+        if (!timerActive && current.fishTrap != 237043764 && old.fishTrap == 237043764 || current.fishTrap2 != 237043764 && old.fishTrap2 == 237043764)
         {
             vars.FIshTrapStart = current.levelTime;
             //print("Fish trap activated - starting 70s countdown");
@@ -449,7 +476,7 @@ update
             string formattedTime = remainingTime.ToString(@"m\:ss\.ff");
             vars.SetText(trapDisplayName, formattedTime);
         }
-        else if (current.levelTime == 0)
+        else if (current.levelTime < 100 && isFrontEnd)
         {
             vars.SetText(trapDisplayName, "0:00.00");
         }
@@ -530,6 +557,26 @@ update
     }
 
     //Counters
+    if (settings["Cryo Counter"] && isSpaceMap) 
+    {
+        // Initialize CryoCounter if it doesn't exist
+        if (vars.CryoCounter == null) 
+            vars.CryoCounter = 0;
+
+        // Increment only on 0→1 transition
+        if (old.CyroAddress == 0 && current.CyroAddress == 1065353216)
+        {
+            vars.CryoCounter++;
+        }
+
+        // Display the counter
+        vars.SetText("Cryo Counter:", vars.CryoCounter);
+    }
+    else
+    {
+        vars.RemoveText("Cryo Counter:");
+    }
+
     if (settings["Croc Counter"])
     {
         if (old.CrocTrap == 212 && current.CrocTrap == 211)
@@ -545,31 +592,32 @@ update
         vars.RemoveText("Croc Counter:");
     }
 
-    if (settings["Kindles Pops Counter"])
+    if (settings["Kindles Pops Box Counter"])
     {
-        if (old.KindlePops == 1189558217 && current.KindlePops == 1190082505)
+        if (old.KindleBoxes == 203489282 && current.KindleBoxes == 203489284)
         {
             vars.kindlesPopsCounter++; // Increment the counter
         }
 
         // Display the counter value
-        vars.SetText("Kindles Pops Counter:", vars.kindlesPopsCounter);
+        vars.SetText("Kindles Pops Box Counter:", vars.kindlesPopsCounter);
     }
     else
     {
-        vars.RemoveText("Kindles Pops Counter:");
+        vars.RemoveText("Kindles Pops Box Counter:");
     }
 
     if (settings["Clear Counters"])
     {
         // Clear existing counters
         vars.crocsSlamsCounter = 0;
+        vars.CryoCounter = 0;
         vars.kindlesPopsCounter = 0;
 
         // Save the reset values to file
         string[] lines = {
             "Croc: 0",
-            "Kindles Pops: 0"
+            "Kindles Pops Boxes: 0"
         };
         File.WriteAllLines(vars.CountersFilePath, lines);
     }
@@ -577,6 +625,9 @@ update
 
 split
 {
+    if (!settings["Enable Splits"])
+        return false;
+
     if(current.round_counter == vars.round_splits[vars.split_index])
     {
         vars.split_index++;
@@ -629,6 +680,9 @@ isLoading
 
 reset
 {
+   if (!settings["Enable Splits"])
+        return false;
+
    if (settings["Solo Timer"])
     {
         if (current.levelTime == 0 && old.levelTime != 0)
@@ -648,6 +702,7 @@ exit
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
+        {"Script variables", "Script variables:"},
         {"G-Spawn", "G-Spawn:"},
         {"Reset Timer", "Reset Timer:"},
         {"kp", "Kindles Pop Timer:"},
@@ -656,7 +711,8 @@ exit
         {"chipper", "Wood Chipper Trap:"},
         {"water", "Waterfall Trap:"},
         {"Croc Counter", "Croc Counter:"},
-        {"Kindles Pops Counter", "Kindles Pops Counter:"}
+        {"Cryo Counter", "Cryo Counter:"},
+        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"}
     };
 
     // Process all text removals
@@ -676,6 +732,7 @@ shutdown
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
+        {"Script variables", "Script variables:"},
         {"G-Spawn", "G-Spawn:"},
         {"Reset Timer", "Reset Timer:"},
         {"kp", "Kindles Pop Timer:"},
@@ -684,7 +741,8 @@ shutdown
         {"chipper", "Wood Chipper Trap:"},
         {"water", "Waterfall Trap:"},
         {"Croc Counter", "Croc Counter:"},
-        {"Kindles Pops Counter", "Kindles Pops Counter:"}
+        {"Cryo Counter", "Cryo Counter:"},
+        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"}
     };
 
     // Process all text removals
@@ -699,7 +757,8 @@ shutdown
     // Save the values with labels to the file
     string[] lines = {
         "Croc: " + vars.crocsSlamsCounter.ToString(),
-        "Kindles Pops: " + vars.kindlesPopsCounter.ToString()
+        "Cryo: " + vars.CryoCounter.ToString(),
+        "Kindles Pops Boxes: " + vars.kindlesPopsCounter.ToString()
     };
     File.WriteAllLines(vars.CountersFilePath, lines);
 }
