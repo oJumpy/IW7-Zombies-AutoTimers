@@ -3,19 +3,18 @@ A multi-functional LiveSplit script for Call of Duty: Infinite Warfare Zombies.
 
 If you encounter any issues, please DM me on Discord: `ojumpy`
 
-# [Download](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.3/Infinite-Warfare-Master.v1-3.asl)
+# [Download v1.4](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.4/Infinite-Warfare-Master.v1-4.asl)
 
 ## Features
 - Frame Perfect Timing: Times are synced up with the game engine itself.
 - Automatic Splitting: Triggers on every round change.
 - Reset Tracker: Tracks time and `numSnapshotEntities` value.
 - Entity Monitor: Zombie and general entity counter.
-- Counters Monitor: Counter for Crocodile traps and Kindles Pops usage (when shot).
-- Trap Timers for Spaceland and Rave in the Redwoods.
-  - (Spaceland) Crocodile Trap
-  - (Rave) Feed the Fish Trap
-  - (Rave) Wood Chipper
-  - (Rave) Waterfall
+- Counters Monitor: Counter for Kindles Pops Boxes, Cryo grenades, All current avaiable traps
+- Trap Timers for Spaceland, Rave in the Redwoods and Shaolin Shuffle.
+  - (Spaceland) Crocodile Trap, Escape Velocity Trap (Dynamic)
+  - (Rave in the Redwoods) Feed the Fish Trap, Wood Chipper, Waterfall, Log Swing
+  - (Shaolin Shuffle) Ventilation System
 
 ## Setup
 1. Right Click LiveSplit → Edit Layout → `+` button → Control → Scriptable Auto Splitter → Browse to `Infinite-Warfare-Master.asl` and select it.
@@ -44,9 +43,17 @@ If you are going to make your own layout, make sure your LiveSplit is comparing 
 
 For `Timing Method`, I recommend using `Current Timing Method`.
 
+# Counters behaviour:
+Counters will save on a text file, that will be created in your documents folder called: `IW-Counters.txt`
+All counters will stay saved even if you were to close livesplit, the only way to reset it is to check the box called `Clear Counters` in the `scriptable auto splitter` Layout setting. Once cleared you can uncheck the box other wise it will always stay to 0.
+
+# **How to Reset**  Counters:
+1. Open LiveSplit → **Layout Settings** → **Scriptable Auto Splitter**.  
+2. Check **`Clear Counters`** → Counters reset to `0`.  
+3. **Uncheck after reset** (or counters stay at `0`).  
+
 ## Coming Soon
-- Error Tracker: Trap hit counters and more.
-- More Trap Timers for Spaceland.
+- More Trap Timers for other maps.
 
 ## Known Issues
 > [!CAUTION]
