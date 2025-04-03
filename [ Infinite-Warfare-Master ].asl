@@ -9,12 +9,16 @@ state("iw7_ship", "IW Steam")
     int LevelNumEnt : 0x3C98680;
     int fishTrap : 0x60BA5A0;
     int fishTrap2 : 0x60BA5F0;
+    int fishTrap3 : 0x60BA5C8;
     int waterfallTrap : 0x2276828;
     int woodChipperTrap : 0x9AC6EBC;
+    int LogTrap : 0x72113F0;
     int CrocTrap : 0x3D31C78;
+    int SpinTrap : 0x3D335B8;
     int KindlePops : 0x5D5FC1C;
     int KindleBoxes : 0x60C5040; //0x3CA2DE4
     int CyroAddress : 0x9AA7694; 
+    int VentTrap : 0x3D3C720;
 }
 
 state("iw7-mod", "IW7-Mod")
@@ -28,12 +32,16 @@ state("iw7-mod", "IW7-Mod")
     int LevelNumEnt : "iw7_ship.exe", 0x3C98680;
     int fishTrap : "iw7_ship.exe", 0x60BA5A0;
     int fishTrap2 : "iw7_ship.exe", 0x60BA5F0;
+    int fishTrap3 : "iw7_ship.exe", 0x60BA5C8;
     int waterfallTrap : "iw7_ship.exe", 0x2276828;
     int woodChipperTrap : "iw7_ship.exe", 0x9AC6EBC;
+    int LogTrap : "iw7_ship.exe", 0x72113F0;
     int CrocTrap : "iw7_ship.exe", 0x3D31C78;
+    int SpinTrap : "iw7_ship.exe", 0x3D335B8;
     int KindlePops : "iw7_ship.exe", 0x5D5FC1C;
     int KindleBoxes : "iw7_ship.exe", 0x60C5040;
     int CyroAddress : "iw7_ship.exe", 0x9AA7694;
+    int VentTrap : "iw7_ship.exe", 0x3D3C720;
 }
 
 startup
@@ -42,11 +50,10 @@ startup
     settings.Add("Solo Timer", true);
 
     settings.Add("Enable Splits", true);
+        settings.SetToolTip("Enable Splits", "Disable me if you don't want auto-splitter");
 
     //Reset Options (Parent Setting)
     settings.Add("Reset Options", true);
-
-        //Subcategories for Reset Options
         settings.Add("Reset Value", false, "Reset Value", "Reset Options");
         settings.SetToolTip("Reset Value", "Show Raw Reset Values");
 
@@ -55,11 +62,22 @@ startup
 
     //Error Tracker
     settings.Add("Errors Trackers", true);
-        settings.Add("Script variables", false, "Script variables", "Errors Trackers");
+        settings.Add("Children Variable", false, "Children Variable", "Errors Trackers");
         settings.Add("G-Spawn", false, "G-Spawn", "Errors Trackers");
-        settings.Add("Cryo Counter", false, "Cryo Counter", "Errors Trackers");
-        settings.Add("Croc Counter", false, "Croc Counter", "Errors Trackers");
-        settings.Add("Kindles Pops Box Counter", false, "Kindles Pops Box Counter", "Errors Trackers");
+        
+
+    settings.Add("Counters", true);
+        settings.Add("Cryo Counter", false, "Cryo Counter", "Counters");
+        settings.Add("Croc Counter", false, "Croc Counter", "Counters");
+        settings.Add("Kindles Pops Box Counter", false, "Kindles Pops Box Counter", "Counters");
+
+        settings.Add("Fish Trap Counter", false, "Fish Trap Counter", "Counters");
+        settings.Add("Waterfall Trap Counter", false, "Waterfall Trap Counter", "Counters");
+        settings.Add("Wood Chipper Trap Counter", false, "Wood Chipper Trap Counter", "Counters");
+        settings.Add("Log Trap Counter", false, "Log Trap Counter", "Counters");
+        settings.Add("Spin Trap Counter", false, "Spin Trap Counter", "Counters");
+        settings.Add("Vent Trap Counter", false, "Vent Trap Counter", "Counters");
+
     
     settings.Add("Clear Counters", false);
 
@@ -68,22 +86,23 @@ startup
         settings.Add("kp", false, "Kindles Pops", "Trap Timers");
 
         settings.Add("sl", false, "Spaceland", "Trap Timers");
-            settings.Add("ev", false, "Escape Velocity", "sl");
+            settings.Add("ev", true, "Escape Velocity", "sl");
             settings.Add("croc", false, "Crocodile", "sl");
 
         settings.Add("rave", false, "Rave in the Redwoods", "Trap Timers");
             settings.Add("feedthefish", true, "Feed the fish", "rave");
             settings.Add("chipper", false, "Wood Chipper", "rave");
             settings.Add("water", false, "Waterfall", "rave");
+            settings.Add("log", false, "Log Swing", "rave");
 
         settings.Add("shuffle", false, "Shaolin Shuffle", "Trap Timers");
-            //settings.Add("bunker", true, "Bunker", "gk");
+            settings.Add("vent", true, "Ventilation System", "shuffle");
 
         settings.Add("attack", false, "Attack of the Radioactive Thing", "Trap Timers");
-            //.Add("camptrap", true, "Verruckt Trap", "rev");
+            //.Add("camptrap", true, "Verruckt Trap", "attack");
 
         settings.Add("beast", false, "The Beast From Beyond", "Trap Timers");
-            //settings.Add("doubletap", true, "Double Tap", "verruckt");
+            //settings.Add("doubletap", true, "Double Tap", "beast");
 
 
     //Function to set text component
@@ -160,6 +179,30 @@ startup
             {
                 vars.kindlesPopsCounter = int.Parse(line.Split(':')[1].Trim());
             }
+            else if (line.StartsWith("Fish Trap:"))
+            {
+                vars.fishTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Waterfall Trap:"))
+            {
+                vars.waterfallTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Wood Chipper Trap:"))
+            {
+                vars.woodChipperTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Log Trap:"))
+            {
+                vars.logTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Spin Trap:"))
+            {
+                vars.spinTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
+            else if (line.StartsWith("Vent Trap:"))
+            {
+                vars.ventTrapCounter = int.Parse(line.Split(':')[1].Trim());
+            }
         }
     }
     else
@@ -167,10 +210,26 @@ startup
         vars.crocsSlamsCounter = 0;
         vars.CryoCounter = 0;
         vars.kindlesPopsCounter = 0;
+
+        vars.fishTrapCounter = 0;
+        vars.waterfallTrapCounter = 0;
+        vars.woodChipperTrapCounter = 0;
+        vars.logTrapCounter = 0;
+        vars.spinTrapCounter = 0;
+        vars.ventTrapCounter = 0;
     }
 
     vars.CryoCounter = 0;
     vars.kindlesPopsCounter = 0;
+
+    vars.fishTrapCounter = 0;
+    vars.waterfallTrapCounter = 0;
+    vars.woodChipperTrapCounter = 0;
+    vars.logTrapCounter = 0;
+    vars.spinTrapCounter = 0;
+    vars.ventTrapCounter = 0;
+
+    vars.maxChildrenAddress = 0;
 
     // Existing box hits initialization...
     //vars.nadeCounter = 0;
@@ -213,10 +272,26 @@ init
     vars.trueTime = 0;  // Initialize true time
 
     vars.TrapStartKindlesPop = -800;
+    //Spaceland
     vars.TrapStartCrocodile = -130;
+
+    vars.TrapStartEscapeVelocity = -1460;
+
+    vars.evActivationsThisRound = 0;
+    vars.lastEvRound = 0;
+    vars.lastActivationRound = 0;
+    vars.evCooldownRemaining = 0;
+
+    //Rave
     vars.FIshTrapStart = -1400;
     vars.WaterfallTrapStart = -1100;
+    vars.TrapStartLog = -1030;
     vars.WoodChipperTrapStart = -1360;
+
+    //Shaolin
+    vars.TrapStartVent = -6540;
+
+    
     
     if (settings["Solo Timer"])
     {
@@ -244,6 +319,7 @@ update
         if (old.levelTime > 0 && current.levelTime == 0)
         {
             vars.fixedOffsetGameTime = 0;
+            vars.maxChildrenAddress = 0;
         }
         
         // Detect game start (levelTime transition from 0 to >0)
@@ -257,39 +333,47 @@ update
     }
 
     if (settings["Reset Options"])
-        {
-            if(old.Entities != current.Entities)
-	        {
-	        	vars.elapsedTime = vars.startTime - current.levelTime;
-	        	vars.elapsedReset = vars.startReset - current.resetTime;
+{
+    if(old.Entities != current.Entities)
+    {
+        vars.elapsedTime = vars.startTime - current.levelTime;
+        vars.elapsedReset = vars.startReset - current.resetTime;
 
-	        	vars.startTime = current.levelTime;
-	        	vars.startReset = current.resetTime;
-	        }
-    
-        //Update Reset Value Component (only if setting is enabled)
-        if (settings["Reset Value"])
+        vars.startTime = current.levelTime;
+        vars.startReset = current.resetTime;
+    }
+
+    // Pre-calculate reset values safely
+    if (settings["Reset Timer"] || settings["Reset Value"])
+    {
+        if (vars.elapsedTime != 0)
         {
             vars.resetPerTick = vars.elapsedReset / vars.elapsedTime;
             vars.ticksLeft = (2147483647.0 - current.resetTime) / vars.resetPerTick;
-            string resetText = current.resetTime.ToString() + " / 2147483647"; //Raw reset time
-            vars.SetText("Reset Value:", resetText);
         }
         else
         {
-            vars.RemoveText("Reset Value:");
+            vars.resetPerTick = 0;
+            vars.ticksLeft = 0;
         }
+    }
 
-        if (settings["Reset Timer"])
+    //Update Reset Value Component
+    if (settings["Reset Value"])
+    {
+        string resetText = current.resetTime.ToString() + " / 2147483647";
+        vars.SetText("Reset Value:", resetText);
+    }
+    else
+    {
+        vars.RemoveText("Reset Value:");
+    }
+
+    if (settings["Reset Timer"])
+    {
+        if (vars.resetPerTick != 0 && vars.ticksLeft > 0 && vars.ticksLeft < 1e9)
         {
-            vars.resetPerTick = vars.elapsedReset / vars.elapsedTime;
-            vars.ticksLeft = (2147483647.0 - current.resetTime) / vars.resetPerTick;
-
-            //Validate ticksLeft to prevent extreme values
-            if (vars.ticksLeft > 0 && vars.ticksLeft < 1e9) // Adjust bounds as needed
-            {
-                //Calculate the time from ticksLeft
-                double totalMilliseconds = vars.ticksLeft * 50;
+            double totalMilliseconds = vars.ticksLeft * 50;
 
                 //Calculate hours, minutes, seconds, and hundredths manually
                 int hours = (int)(totalMilliseconds / (1000 * 60 * 60));
@@ -338,14 +422,28 @@ update
         }
     }
 
-    if (settings["Script variables"])
+    if (settings["Children Variable"])
     {
-        string resetText = current.ChildrenAddress.ToString() + " / 40960"; //Raw reset time
-        vars.SetText("Script variables:", resetText);
+        // Initialize max value if not set
+        if (vars.maxChildrenAddress == null)
+        {
+            vars.maxChildrenAddress = current.ChildrenAddress;
+        }
+
+        // Update max value if current is higher
+        if (current.ChildrenAddress > vars.maxChildrenAddress)
+        {
+            vars.maxChildrenAddress = current.ChildrenAddress;
+        }
+
+        //string resetText = current.ChildrenAddress.ToString() + " / 40960"; //Raw reset time
+        string resetText = current.ChildrenAddress.ToString() + " Max: " + vars.maxChildrenAddress.ToString() + " / 40960";
+        vars.SetText("Child Error:", resetText);
     }
     else
     {
-        vars.RemoveText("Script variables:");
+        vars.RemoveText("Child Error:");
+        vars.maxChildrenAddress = null; // Reset max when disabled
     }
 
     if (settings["G-Spawn"])
@@ -399,7 +497,86 @@ update
 
     bool isSpaceMap = (baseMap == "cp_zmb");
     bool isRaveMap = (baseMap == "cp_rave");
+    bool isShaolinMap = (baseMap == "cp_disco");
     bool isFrontEnd = (baseMap == "cp_frontend");
+
+    if (settings["ev"] && isSpaceMap)
+    {
+        string trapDisplayName = "Escape Velocity Trap:";
+
+        // Initialize display
+        if (vars.TrapStartEscapeVelocity == -1460 && vars.evCooldownRemaining <= 0)
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+
+        // Track time since last activation
+        int timeSinceActivation = (vars.TrapStartEscapeVelocity != -1460) 
+            ? current.levelTime - vars.TrapStartEscapeVelocity 
+            : -1;
+
+        // Check if round changed
+        if (current.round_counter != vars.lastEvRound)
+        {
+            bool wasInFirst28s = (vars.TrapStartEscapeVelocity != -1460) && (timeSinceActivation < 560);
+            vars.lastEvRound = current.round_counter;
+
+            if (wasInFirst28s)
+            {
+                // Store remaining base cooldown and continue counting
+                vars.evCooldownRemaining = 1460 - timeSinceActivation;
+                vars.TrapStartEscapeVelocity = current.levelTime; // Keep timer running
+                vars.evActivationsThisRound = 1; // Count as first activation
+            }
+            else if (vars.TrapStartEscapeVelocity == -1460)
+            {
+                vars.evActivationsThisRound = 0;
+            }
+        }
+
+        // Start countdown on trap activation (transition from 704)
+        if (current.SpinTrap != 704 && old.SpinTrap == 704)
+        {
+            if (vars.lastActivationRound != current.round_counter)
+            {
+                vars.evActivationsThisRound = 0;
+                vars.lastActivationRound = current.round_counter;
+            }
+            vars.evActivationsThisRound++;
+            vars.TrapStartEscapeVelocity = current.levelTime;
+            vars.evCooldownRemaining = 0; // Clear any stored cooldown
+        }
+
+        // Show countdown if active
+        if (vars.TrapStartEscapeVelocity != -1460)
+        {
+            int totalDuration = 560 + (vars.evActivationsThisRound * 900);
+            int elapsed = current.levelTime - vars.TrapStartEscapeVelocity;
+
+            // Use stored cooldown if we have one
+            int remaining = (vars.evCooldownRemaining > 0) 
+                ? vars.evCooldownRemaining - elapsed
+                : totalDuration - elapsed;
+
+            remaining = Math.Max(0, remaining);
+
+            vars.SetText(trapDisplayName, TimeSpan.FromMilliseconds(remaining * 50).ToString(@"m\:ss\.ff"));
+
+            if (remaining <= 0)
+            {
+                vars.TrapStartEscapeVelocity = -1460;
+                vars.evCooldownRemaining = 0;
+            }
+        }
+        else
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+    }
+    else
+    {
+        vars.RemoveText("Escape Velocity Trap:");
+    }
     
     if (settings["croc"] && isSpaceMap) 
     {
@@ -461,7 +638,8 @@ update
         }
     
         // Only allow new activation if timer isn't already running
-        if (!timerActive && current.fishTrap != 237043764 && old.fishTrap == 237043764 || current.fishTrap2 != 237043764 && old.fishTrap2 == 237043764)
+        if (!timerActive && current.fishTrap != 237043764 && old.fishTrap == 237043764 || current.fishTrap2 != 237043764 && old.fishTrap2 == 237043764 || 
+            current.fishTrap3 != 237043764 && old.fishTrap3 == 237043764)
         {
             vars.FIshTrapStart = current.levelTime;
             //print("Fish trap activated - starting 70s countdown");
@@ -500,7 +678,7 @@ update
             vars.SetText(trapDisplayName, "0:00.00");
         }
 
-        // Start countdown when trap activates (value becomes 2)
+        
         if (current.woodChipperTrap != 0 && old.woodChipperTrap == 0)
         {
             vars.WoodChipperTrapStart = current.levelTime;
@@ -533,7 +711,7 @@ update
             vars.SetText(trapDisplayName, "00.00");
         }
 
-        // Start countdown when trap activates (value becomes 2)
+        
         if (current.waterfallTrap == 1 && old.waterfallTrap != 1)
         {
             vars.WaterfallTrapStart = current.levelTime;
@@ -554,6 +732,71 @@ update
     else
     {
         vars.RemoveText("Waterfall Trap:");
+    }
+
+    if (settings["log"] && isRaveMap) 
+    {
+        string trapDisplayName = "Log Swing Trap:";
+
+        // Initialize display (only needed once)
+        if (vars.TrapStartLog == -1030)
+        {
+            vars.SetText(trapDisplayName, "00.00");
+        }
+
+        if (current.LogTrap == 1 && old.LogTrap != 1)
+        {
+            vars.TrapStartLog = current.levelTime;
+        }
+
+        // Show countdown if timer is active
+        if (vars.TrapStartLog != -1030)
+        {
+            int elapsedTicks = current.levelTime - vars.TrapStartLog;
+            int remainingTicks = Math.Max(0, 1030 - elapsedTicks);
+            
+            TimeSpan remainingTime = TimeSpan.FromMilliseconds(remainingTicks * 50);
+            string formattedTime = remainingTime.ToString(@"ss\.ff");
+            
+            vars.SetText(trapDisplayName, formattedTime);
+        }
+    }
+    else
+    {
+        vars.RemoveText("Log Swing Trap:");
+    }
+
+    //Shaolin
+    if (settings["vent"] && isShaolinMap)
+    {
+        string trapDisplayName = "Ventilation System Trap:";
+
+        // Initialize display (only needed once)
+        if (vars.TrapStartVent == -6540)
+        {
+            vars.SetText(trapDisplayName, "0:00.00");
+        }
+
+        if (current.VentTrap != 174 && old.VentTrap == 174)
+        {
+            vars.TrapStartVent = current.levelTime;
+        }
+
+        // Show countdown if timer is active
+        if (vars.TrapStartVent != -6540)
+        {
+            int elapsedTicks = current.levelTime - vars.TrapStartVent;
+            int remainingTicks = Math.Max(0, 6540 - elapsedTicks);
+            
+            TimeSpan remainingTime = TimeSpan.FromMilliseconds(remainingTicks * 50);
+            string formattedTime = remainingTime.ToString(@"m\:ss\.ff");
+            
+            vars.SetText(trapDisplayName, formattedTime);
+        }
+    }
+    else
+    {
+        vars.RemoveText("Ventilation System Trap:");
     }
 
     //Counters
@@ -607,6 +850,92 @@ update
         vars.RemoveText("Kindles Pops Box Counter:");
     }
 
+    // Fish Trap Counter
+    if (settings["Fish Trap Counter"] && isRaveMap)
+    {
+        if ((current.fishTrap != 237043764 && old.fishTrap == 237043764) || 
+            (current.fishTrap2 != 237043764 && old.fishTrap2 == 237043764) || 
+            (current.fishTrap3 != 237043764 && old.fishTrap3 == 237043764))
+        {
+            vars.fishTrapCounter++;
+        }
+        vars.SetText("Fish Trap Counter:", vars.fishTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Fish Trap Counter:");
+    }
+
+    // Waterfall Trap Counter
+    if (settings["Waterfall Trap Counter"] && isRaveMap)
+    {
+        if (current.waterfallTrap == 1 && old.waterfallTrap != 1)
+        {
+            vars.waterfallTrapCounter++;
+        }
+        vars.SetText("Waterfall Trap Counter:", vars.waterfallTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Waterfall Trap Counter:");
+    }
+
+    // Wood Chipper Trap Counter
+    if (settings["Wood Chipper Trap Counter"] && isRaveMap)
+    {
+        if (current.woodChipperTrap != 0 && old.woodChipperTrap == 0)
+        {
+            vars.woodChipperTrapCounter++;
+        }
+        vars.SetText("Wood Chipper Trap Counter:", vars.woodChipperTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Wood Chipper Trap Counter:");
+    }
+
+    // Log Trap Counter
+    if (settings["Log Trap Counter"] && isRaveMap)
+    {
+        if (current.LogTrap == 1 && old.LogTrap != 1)
+        {
+            vars.logTrapCounter++;
+        }
+        vars.SetText("Log Trap Counter:", vars.logTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Log Trap Counter:");
+    }
+
+    // Spin Trap Counter
+    if (settings["Spin Trap Counter"] && isSpaceMap)
+    {
+        if (current.SpinTrap != 704 && old.SpinTrap == 704)
+        {
+            vars.spinTrapCounter++;
+        }
+        vars.SetText("Spin Trap Counter:", vars.spinTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Spin Trap Counter:");
+    }
+
+    // Vent Trap Counter
+    if (settings["Vent Trap Counter"] && isShaolinMap)
+    {
+        if (current.VentTrap != 174 && old.VentTrap == 174)
+        {
+            vars.ventTrapCounter++;
+        }
+        vars.SetText("Vent Trap Counter:", vars.ventTrapCounter);
+    }
+    else
+    {
+        vars.RemoveText("Vent Trap Counter:");
+    }
+
     if (settings["Clear Counters"])
     {
         // Clear existing counters
@@ -614,10 +943,24 @@ update
         vars.CryoCounter = 0;
         vars.kindlesPopsCounter = 0;
 
+        vars.fishTrapCounter = 0;
+    vars.waterfallTrapCounter = 0;
+    vars.woodChipperTrapCounter = 0;
+    vars.logTrapCounter = 0;
+    vars.spinTrapCounter = 0;
+    vars.ventTrapCounter = 0;
+
         // Save the reset values to file
         string[] lines = {
             "Croc: 0",
-            "Kindles Pops Boxes: 0"
+            "Cryo: 0",
+            "Kindles Pops Boxes: 0",
+            "Fish Trap: 0",
+            "Waterfall Trap: 0",
+            "Wood Chipper Trap: 0",
+            "Log Trap: 0",
+            "Spin Trap: 0",
+            "Vent Trap: 0"
         };
         File.WriteAllLines(vars.CountersFilePath, lines);
     }
@@ -702,17 +1045,26 @@ exit
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
-        {"Script variables", "Script variables:"},
+        {"Children Variable", "Child Error:"},
         {"G-Spawn", "G-Spawn:"},
         {"Reset Timer", "Reset Timer:"},
         {"kp", "Kindles Pop Timer:"},
+        {"ev", "Escape Velocity Trap:"},
         {"croc", "Crocodile Trap:"},
         {"feedthefish", "Fish Trap:"},
         {"chipper", "Wood Chipper Trap:"},
         {"water", "Waterfall Trap:"},
+        {"log", "Log Swing Trap:"},
+        {"vent", "Ventilation System Trap:"},
         {"Croc Counter", "Croc Counter:"},
         {"Cryo Counter", "Cryo Counter:"},
-        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"}
+        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"},
+        {"Fish Trap Counter", "Fish Trap Counter:"},
+        {"Waterfall Trap Counter", "Waterfall Trap Counter:"},
+        {"Wood Chipper Trap Counter", "Wood Chipper Trap Counter:"},
+        {"Log Trap Counter", "Log Trap Counter:"},
+        {"Spin Trap Counter", "Spin Trap Counter:"},
+        {"Vent Trap Counter", "Vent Trap Counter:"}
     };
 
     // Process all text removals
@@ -732,17 +1084,26 @@ shutdown
     {
         {"Reset Value", "Reset Value:"},
         {"Entities", "Entities:"},
-        {"Script variables", "Script variables:"},
+        {"Children Variable", "Child Error:"},
         {"G-Spawn", "G-Spawn:"},
         {"Reset Timer", "Reset Timer:"},
         {"kp", "Kindles Pop Timer:"},
+        {"ev", "Escape Velocity Trap:"},
         {"croc", "Crocodile Trap:"},
         {"feedthefish", "Fish Trap:"},
         {"chipper", "Wood Chipper Trap:"},
         {"water", "Waterfall Trap:"},
+        {"log", "Log Swing Trap:"},
+        {"vent", "Ventilation System Trap:"},
         {"Croc Counter", "Croc Counter:"},
         {"Cryo Counter", "Cryo Counter:"},
-        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"}
+        {"Kindles Pops Box Counter", "Kindles Pops Box Counter:"},
+        {"Fish Trap Counter", "Fish Trap Counter:"},
+        {"Waterfall Trap Counter", "Waterfall Trap Counter:"},
+        {"Wood Chipper Trap Counter", "Wood Chipper Trap Counter:"},
+        {"Log Trap Counter", "Log Trap Counter:"},
+        {"Spin Trap Counter", "Spin Trap Counter:"},
+        {"Vent Trap Counter", "Vent Trap Counter:"}
     };
 
     // Process all text removals
@@ -758,7 +1119,13 @@ shutdown
     string[] lines = {
         "Croc: " + vars.crocsSlamsCounter.ToString(),
         "Cryo: " + vars.CryoCounter.ToString(),
-        "Kindles Pops Boxes: " + vars.kindlesPopsCounter.ToString()
+        "Kindles Pops Boxes: " + vars.kindlesPopsCounter.ToString(),
+        "Fish Trap: " + vars.fishTrapCounter.ToString(),
+        "Waterfall Trap: " + vars.waterfallTrapCounter.ToString(),
+        "Wood Chipper Trap: " + vars.woodChipperTrapCounter.ToString(),
+        "Log Trap: " + vars.logTrapCounter.ToString(),
+        "Spin Trap: " + vars.spinTrapCounter.ToString(),
+        "Vent Trap: " + vars.ventTrapCounter.ToString()
     };
     File.WriteAllLines(vars.CountersFilePath, lines);
 }
