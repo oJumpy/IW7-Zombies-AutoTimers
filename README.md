@@ -3,7 +3,7 @@ A multi-functional LiveSplit script for Call of Duty: Infinite Warfare Zombies.
 
 If you encounter any issues, please DM me on Discord: `ojumpy`
 
-# [Download v1.4](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.4/Infinite-Warfare-Master.v1-4.asl)
+# [Download v1.4](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.5/Infinite-Warfare-Master.-.v1.5.asl)
 
 ## Features
 - Frame Perfect Timing: Times are synced up with the game engine itself.
@@ -14,7 +14,7 @@ If you encounter any issues, please DM me on Discord: `ojumpy`
 - Trap Timers for Spaceland, Rave in the Redwoods and Shaolin Shuffle.
   - (Spaceland) Crocodile Trap, Escape Velocity Trap (Dynamic)
   - (Rave in the Redwoods) Feed the Fish Trap, Wood Chipper, Waterfall, Log Swing
-  - (Shaolin Shuffle) Ventilation System
+  - (Shaolin Shuffle) Ventilation System, Hydrant, Electric Trap
 
 ## Setup
 1. Right Click LiveSplit → Edit Layout → `+` button → Control → Scriptable Auto Splitter → Browse to `Infinite-Warfare-Master.asl` and select it.
