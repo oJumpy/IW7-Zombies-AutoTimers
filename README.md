@@ -3,7 +3,7 @@ A multi-functional LiveSplit script for Call of Duty: Infinite Warfare Zombies.
 
 If you encounter any issues, please DM me on Discord: `ojumpy`
 
-# [Download v1.4](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.5/Infinite-Warfare-Master.-.v1.5.asl)
+# [Download v1.5](https://github.com/oJumpy/IW7-Zombies-AutoTimers/releases/download/v1.5/Infinite-Warfare-Master.-.v1.5.asl)
 
 ## Features
 - Frame Perfect Timing: Times are synced up with the game engine itself.
