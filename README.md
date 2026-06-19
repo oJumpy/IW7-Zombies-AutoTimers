@@ -75,3 +75,99 @@ The fish trap behavior might occasionally act unexpectedly:
 - Timer restarting prematurely.
 - Timer not resetting properly after completion.
 
+
+# What Leaks Variables?
+
+# General leaks:
+
+## Bags
+- Bags will permanently leak, if **NOT** picked up
+- 99% They don't leak, or not leak anywhere near as bad if picked up
+
+## Camo Leaks:
+These specific camos will permanently leak if the weapon is taken away, like when papped:
+- camo31 - mw2_camo_31, Nostalgia
+- camo84 - blood_camo_84, Jam
+- camo222 -  blood_camo_222, maybe this is Jam again? or Death?
+
+Once the weapon is taken or papped, the tracking script stays running on you forever. Even though you don't have the camo anymore, getting kills with any other weapon will still trigger the leak on every kill.
+
+If you pap these weapons multiple times, or go down with them multiple times, the leaked threads will stack up and make the leak even worse.
+
+## Specific weapons that hit zombies will leak:
+Any weapons or equipment that apply burning (fire) or freeze (cold) effects will leak. 
+
+Hitting the zombie is what causes the leak and it's actually worse when killing them.
+
+List of weapons that leak:
+- iw7_erad, Erad - Cyclopean, passive_fire_damage 
+- iw7_erad, Erad - Merciless, passive_cold_damage 
+- iw7_rvn, RVN - Blown Fuse, passive_fire_damage 
+- iw7_emc, EMC - Avalanche, passive_fire_damage 
+- iw7_kbs, KBS Longbow - Affliction, passive_cold_damage 
+- iw7_mauler, Mauler - Expanse, passive_cold_damage 
+- iw7_forgefreeze, Forgefreeze, passive_cold_damage
+- iw7_tacburst, Tac-Burst - Siren / Siren's Song, passive_cold_damage_gl
+
+## PaP seems to be actually safe to use, the only leaks are:
+1 - If you enter pap room, leave and **re-enter it, within 60 seconds**, it will leak
+2 - i guess more rare case, but for coops, disconnecting while entering pap room or while papping leaving the gun there, will permanently leak
+
+## Disconnect leaks:
+There's actually a bunch of leaks in coops, with players disconnecting during certain conditions, so would just be careful with that, before leaving a game in coop try to not do anything at all 
+
+# Spaceland
+
+## Croc
+Using the Croc trap will permanently leak variables if you turn on all 5 power switches.
+- Leaving 1 of the 5 power switches turned off, will leak 1 less thread, compared to 2, if all switches were turned on
+
+## Cryos
+Cryos **only** leak permanent variables, if the counter hits 0
+- Keep always 1 Cryo nade and let it refill, to not cause any permanent leaks
+
+# Rave in the Redwood
+
+# About Traps:
+About traps on Rave, Fish Trap, Wood Chipper and Lawn Mower, seem to leak
+
+- **Fish Trap:** killing a full horde of 24 zombies at once causes a massive temporary spike
+
+- **Wood Chipper and Lawn Mower:** seem to only leak if you kill the zombies before the trap does 
+
+- **"Balloons Trap", Waterfall, and Log Swing traps are safe to use.**
+
+# Bow leaks:
+
+Acid Rain, bow seems safe to use, there's a temporary spike, only if you kill too many zombies at once with it or if you were to down while the Acid Rain is active
+
+Whirlwind bow, seems to actually be pretty bad to be used in general no matter what, especially on full hordes
+
+Trap-O-Matic, also is pretty bad to use, seems to leak variables each time time it connects to create the trap line thing,  especially having multiples active will create a permanent leak, because it won't clean up the one previously crated
+
+Also the storm one seemed bad to use, but i know it's not used anyways
+
+# ZipLine 
+- Is safe to use it self, unless during special conditions, it will just have some temporary spike in variables, when you go near the trigger.<br> 
+The special conditions is downing while using it, will create permanent leak, you cold clear this one if you are playing a coop, where you can bleed out and spawn back in, prob not very useful tbh
+
+# How to Track these leaks?
+With the LiveSplit script, you can track exactly where the leaks are building up.
+Here is what to monitor with the tracker:
+
+- Camo Leaks: Monitor **Notify Threads** and **Stacks** 
+
+- Specific weapon leak: Monitor **Notify Threads**, **Pointers**, and **Stacks**
+
+- PaP Room Quick Re-entry Leak: Monitor **Notify Threads**, **Stacks**, and **Threads**.
+
+- Croc Trap Leak: Monitor **Notify Threads**, **Threads**, and **Stacks**
+
+- Cryo Grenade : Monitor **Threads**, **Notify Threads**, and **Stacks**.
+
+- Acid Rain Horde Clumping Leak: Monitor **Pointers** and **Structs**
+
+- Whirlwind Sound & Zombie State Leak: Monitor **Pointers** 
+
+- Trap-O-Matic Array & Origin Leak: Monitor **Pointers** For just creating the trap, **Structs**, and **Notify Threads** For multiple active traps
+
