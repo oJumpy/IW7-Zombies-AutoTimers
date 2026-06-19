@@ -113,6 +113,18 @@ List of weapons that leak:
 1 - If you enter pap room, leave and **re-enter it, within 60 seconds**, it will leak
 2 - i guess more rare case, but for coops, disconnecting while entering pap room or while papping leaving the gun there, will permanently leak
 
+
+## Transponder
+- Throwing it and using it normally is safe.
+- If you were to throw it somewhere it can't be placed at and goes back to your inventory, it is safe.
+**Leak:**
+- If a placed Transponder gets destroyed or replaced by throwing a new one, it permanently leaks. **In Solo, nothing can clean this up.**
+- If you pull it out and cancel the throw, it leaks. However, you can **clear this thread completely** by buying any other equipment.
+
+
+## Rewind
+Seems to be safe to use.
+
 ## Disconnect leaks:
 There's actually a bunch of leaks in coops, with players disconnecting during certain conditions, so would just be careful with that, before leaving a game in coop try to not do anything at all 
 
@@ -128,7 +140,7 @@ Cryos **only** leak permanent variables, if the counter hits 0
 
 # Rave in the Redwood
 
-# About Traps:
+## About Traps:
 About traps on Rave, Fish Trap, Wood Chipper and Lawn Mower, seem to leak
 
 - **Fish Trap:** killing a full horde of 24 zombies at once causes a temporary spike
@@ -137,7 +149,7 @@ About traps on Rave, Fish Trap, Wood Chipper and Lawn Mower, seem to leak
 
 - **"Balloons Trap", Waterfall, and Log Swing traps are safe to use.**
 
-# Bow leaks:
+## Bow leaks:
 
 Acid Rain, bow seems safe to use, there's a temporary spike, only if you kill too many zombies at once with it or if you were to down while the Acid Rain is active
 
@@ -147,7 +159,7 @@ Trap-O-Matic, also is pretty bad to use, seems to leak variables each time time 
 
 Also the storm one seemed bad to use, but i know it's not used anyways
 
-# ZipLine 
+## ZipLine 
 - Is safe to use it self, unless during special conditions, it will just have some temporary spike in variables, when you go near the trigger.<br> 
 The special conditions is downing while using it, will create permanent leak, you cold clear this one if you are playing a coop, where you can bleed out and spawn back in, prob not very useful tbh
 
