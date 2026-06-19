@@ -131,7 +131,7 @@ Cryos **only** leak permanent variables, if the counter hits 0
 # About Traps:
 About traps on Rave, Fish Trap, Wood Chipper and Lawn Mower, seem to leak
 
-- **Fish Trap:** killing a full horde of 24 zombies at once causes a massive temporary spike
+- **Fish Trap:** killing a full horde of 24 zombies at once causes a temporary spike
 
 - **Wood Chipper and Lawn Mower:** seem to only leak if you kill the zombies before the trap does 
 
